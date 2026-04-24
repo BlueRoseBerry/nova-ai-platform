@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: nova-ai-agent
+  threads:
+    virtual:
+      enabled: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+server:
+  port: 8082

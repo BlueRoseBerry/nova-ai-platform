@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: nova-ai-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: nova-ai-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/digital-human/**
+        - id: nova-ai-agent
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/agent/**
+        - id: nova-ai-workflow
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/workflow/**
+        - id: nova-ai-model-gateway
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/v1/model/**
+        - id: nova-ai-rag
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/v1/rag/**
+        - id: nova-ai-skill
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/v1/skill/**
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus

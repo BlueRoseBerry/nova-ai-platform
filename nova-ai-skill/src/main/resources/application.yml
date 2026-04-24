@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: nova-ai-skill
+
+server:
+  port: 8086

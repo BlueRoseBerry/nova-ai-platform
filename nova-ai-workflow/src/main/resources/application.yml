@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: nova-ai-workflow
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: 8083

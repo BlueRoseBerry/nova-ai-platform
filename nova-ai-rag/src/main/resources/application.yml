@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: nova-ai-rag
+
+server:
+  port: 8085
+
+nova:
+  milvus:
+    host: localhost
+    port: 19530
+    collection: nova_ai_vectors
