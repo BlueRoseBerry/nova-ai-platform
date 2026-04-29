@@ -1,9 +1,12 @@
 package com.nova.ai.rag.embedder;
 
+import org.springframework.stereotype.Service;
+
 /**
  * Embedding service for converting text to vector representations.
  * In production, this would call an embedding model (e.g., OpenAI text-embedding-ada-002).
  */
+@Service
 public class EmbeddingService {
 
     private static final int EMBEDDING_DIM = 1536;

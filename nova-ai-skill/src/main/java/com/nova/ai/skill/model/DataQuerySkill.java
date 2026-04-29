@@ -1,6 +1,5 @@
-package com.nova.ai.skill.impl;
+package com.nova.ai.skill.model;
 
-import com.nova.ai.skill.model.*;
 import java.util.Map;
 
 public record DataQuerySkill(

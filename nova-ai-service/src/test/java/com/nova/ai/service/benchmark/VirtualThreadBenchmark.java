@@ -35,7 +35,7 @@ public class VirtualThreadBenchmark {
         System.out.println();
 
         long platformTime = benchmarkPlatformThreads();
-        long virtualTime = benchmarkVirtualThreads();
+        long virtualTime = benchmarkVirtualThreadsTwo();
 
         System.out.println("=== Results ===");
         System.out.printf("Platform Threads (pool=%d): %d ms%n", PLATFORM_THREAD_POOL_SIZE, platformTime);
@@ -68,7 +68,7 @@ public class VirtualThreadBenchmark {
         return elapsed;
     }
 
-    private long benchmarkVirtualThreads() throws InterruptedException {
+    private long benchmarkVirtualThreadsTwo() throws InterruptedException {
         AtomicInteger completed = new AtomicInteger(0);
         ExecutorService virtualExecutor = Executors.newVirtualThreadPerTaskExecutor();
         CountDownLatch latch = new CountDownLatch(TOTAL_REQUESTS);

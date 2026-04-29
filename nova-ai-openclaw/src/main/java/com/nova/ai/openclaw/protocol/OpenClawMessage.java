@@ -16,16 +16,3 @@ public record OpenClawMessage(
     OpenClawPayload payload
 ) {}
 
-public record OpenClawPayload(
-    String action,
-    Map<String, Object> parameters,
-    String content
-) {}
-
-public enum MessageType {
-    REQUEST,
-    RESPONSE,
-    EVENT,
-    ERROR,
-    STREAMING
-}

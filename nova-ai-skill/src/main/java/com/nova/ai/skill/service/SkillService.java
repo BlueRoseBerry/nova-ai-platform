@@ -1,7 +1,6 @@
 package com.nova.ai.skill.service;
 
 import com.nova.ai.skill.model.*;
-import com.nova.ai.skill.impl.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

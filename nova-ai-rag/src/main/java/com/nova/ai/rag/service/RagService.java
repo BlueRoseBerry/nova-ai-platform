@@ -2,6 +2,7 @@ package com.nova.ai.rag.service;
 
 import com.nova.ai.rag.chunker.DocumentChunker;
 import com.nova.ai.rag.embedder.EmbeddingService;
+import com.nova.ai.rag.model.RetrievedChunk;
 import com.nova.ai.rag.vectorstore.MilvusVectorStore;
 import com.nova.ai.rag.retriever.Retriever;
 import org.slf4j.Logger;
@@ -58,10 +59,8 @@ public class RagService {
         List<RetrievedChunk> chunks = retrieve(userQuery, knowledgeBaseId, 5);
         StringBuilder context = new StringBuilder();
         for (RetrievedChunk chunk : chunks) {
-            context.append(chunk.content()).append("\n---\n");
+            context.append(chunk.getContent()).append("\n---\n");
         }
         return "Based on the following knowledge:\n" + context + "\nAnswer: " + userQuery;
     }
 }
-
-record RetrievedChunk(String chunkId, String content, float score) {}

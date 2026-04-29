@@ -1,7 +1,10 @@
 package com.nova.ai.rag.retriever;
 
+import com.nova.ai.rag.model.RetrievedChunk;
 import com.nova.ai.rag.vectorstore.MilvusVectorStore;
 import com.nova.ai.rag.vectorstore.VectorEntry;
+import org.springframework.stereotype.Component;
+
 
 import java.util.List;
 
@@ -9,6 +12,7 @@ import java.util.List;
  * Retriever for RAG pipeline.
  * Performs similarity search in Milvus vector store.
  */
+@Component
 public class Retriever {
 
     private final MilvusVectorStore vectorStore;
@@ -24,5 +28,3 @@ public class Retriever {
             .toList();
     }
 }
-
-record RetrievedChunk(String chunkId, String content, float score) {}

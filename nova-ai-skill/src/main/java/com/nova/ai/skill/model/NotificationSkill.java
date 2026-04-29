@@ -1,6 +1,4 @@
-package com.nova.ai.skill.impl;
-
-import com.nova.ai.skill.model.*;
+package com.nova.ai.skill.model;
 
 public record NotificationSkill(
     String id,

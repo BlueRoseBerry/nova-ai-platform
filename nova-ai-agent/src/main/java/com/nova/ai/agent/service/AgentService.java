@@ -1,41 +1,24 @@
 package com.nova.ai.agent.service;
 
-import com.nova.ai.agent.model.*;
-import com.nova.ai.agent.orchestrator.AgentOrchestrator;
-import org.springframework.stereotype.Service;
+import com.nova.ai.agent.model.Agent;
+import com.nova.ai.agent.model.AgentRequest;
+import com.nova.ai.agent.model.AgentResponse;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 
-/**
- * Agent Service with JDK 25 Structured Concurrency.
- * Orchestrates agent execution with parallel subtasks.
- */
-@Service
-public class AgentService {
+public interface AgentService {
 
-    private final Map<String, Agent> agentRegistry = new ConcurrentHashMap<>();
-    private final AgentOrchestrator orchestrator = new AgentOrchestrator();
+    void register(Agent agent);
 
-    public void register(Agent agent) {
-        agentRegistry.put(agent.id(), agent);
-    }
+    AgentResponse execute(AgentRequest request);
 
-    public AgentResponse execute(AgentRequest request) throws InterruptedException, ExecutionException {
-        Agent agent = agentRegistry.get(request.agentId());
-        if (agent == null) {
-            return new ErrorResponse("resp-err", 404, "Agent not found: " + request.agentId());
-        }
-        return orchestrator.orchestrate(request);
-    }
+    Agent getAgent(String agentId);
 
-    public Agent getAgent(String agentId) {
-        return agentRegistry.get(agentId);
-    }
+    List<Agent> listAgents();
 
-    public List<Agent> listAgents() {
-        return List.copyOf(agentRegistry.values());
-    }
+    /** 更新已存在的 Agent，不存在则返回 {@code null} */
+    Agent updateAgent(Agent agent);
+
+    /** 按 id 删除，删除成功返回 true */
+    boolean deleteAgent(String agentId);
 }

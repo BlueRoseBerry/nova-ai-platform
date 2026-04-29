@@ -1,5 +1,7 @@
 package com.nova.ai.modelgateway.adapter;
 
+import com.nova.ai.modelgateway.model.ChatRequest;
+import com.nova.ai.modelgateway.model.ChatResponse;
 import org.springframework.stereotype.Component;
 import java.util.Map;
 

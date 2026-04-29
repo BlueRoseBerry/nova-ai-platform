@@ -1,5 +1,7 @@
 package com.nova.ai.rag.chunker;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import java.util.List;
  * Document chunker for RAG pipeline.
  * Splits documents into overlapping chunks of specified token size.
  */
+@Component
 public class DocumentChunker {
 
     private static final int DEFAULT_OVERLAP = 50;

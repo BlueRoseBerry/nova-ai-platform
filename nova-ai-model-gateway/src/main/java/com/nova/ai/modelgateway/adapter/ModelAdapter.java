@@ -1,5 +1,8 @@
 package com.nova.ai.modelgateway.adapter;
 
+import com.nova.ai.modelgateway.model.ChatRequest;
+import com.nova.ai.modelgateway.model.ChatResponse;
+
 import java.util.Map;
 
 public interface ModelAdapter {
@@ -7,17 +10,5 @@ public interface ModelAdapter {
     ChatResponse chat(ChatRequest request);
 }
 
-public record ChatRequest(
-    String model,
-    String prompt,
-    double temperature,
-    int maxTokens,
-    Map<String, Object> extraParams
-) {}
 
-public record ChatResponse(
-    String content,
-    int promptTokens,
-    int completionTokens,
-    String model
-) {}
+

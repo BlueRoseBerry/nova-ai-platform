@@ -2,6 +2,7 @@ package com.nova.ai.rag.vectorstore;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Milvus vector store integration for RAG.
  * In production, this connects to a real Milvus server via the Milvus Java SDK.
  */
+@Component
 public class MilvusVectorStore {
 
     private static final Logger log = LoggerFactory.getLogger(MilvusVectorStore.class);
@@ -43,9 +45,3 @@ public class MilvusVectorStore {
     }
 }
 
-record VectorEntry(String chunkId, float[] embedding, String knowledgeBaseId, String content) {}
-record ScoredEntry(String chunkId, float[] embedding, String knowledgeBaseId, String content, float score) {
-    ScoredEntry(VectorEntry entry, float score) {
-        this(entry.chunkId(), entry.embedding(), entry.knowledgeBaseId(), entry.content(), score);
-    }
-}

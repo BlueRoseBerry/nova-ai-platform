@@ -1,6 +1,8 @@
 package com.nova.ai.modelgateway.service;
 
 import com.nova.ai.modelgateway.adapter.*;
+import com.nova.ai.modelgateway.model.ChatRequest;
+import com.nova.ai.modelgateway.model.ChatResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,18 @@
-package com.nova.ai.modelgateway.native;
+package com.nova.ai.modelgateway.local;
 
 import java.lang.foreign.*;
+import java.lang.invoke.MethodHandle;
+
+
+
+import java.lang.foreign.*;
+import java.lang.invoke.MethodHandle;
+
+
+
+import java.lang.foreign.*;
+import java.lang.invoke.MethodHandle;
+
 import static java.lang.foreign.ValueLayout.*;
 
 /**
@@ -44,9 +56,9 @@ public class LocalModelInference {
         }
 
         try (Arena arena = Arena.ofConfined()) {
-            MemorySegment promptSeg = arena.allocateUtf8String(prompt);
+            MemorySegment promptSeg = arena.allocateFrom(prompt);
             MemorySegment resultSeg = (MemorySegment) MODEL_INFER.invokeExact(promptSeg, maxTokens);
-            String result = resultSeg.getUtf8String();
+            String result = resultSeg.toString();
             return result;
         } catch (Throwable e) {
             throw new RuntimeException("Local model inference failed", e);

@@ -3,11 +3,13 @@ package com.nova.ai.agent.orchestrator;
 import com.nova.ai.agent.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.StructuredTaskScope;
-import java.util.concurrent.StructuredTaskScope.Subtask;
+import java.util.concurrent.Future;
+import java.util.concurrent.Executors;
 
 /**
  * JDK 25 Structured Concurrency Showcase.
@@ -16,11 +18,12 @@ import java.util.concurrent.StructuredTaskScope.Subtask;
  * - Conversation history loading
  * - Tool registry lookup
  * These tasks are independent and can run in parallel.
- * Structured concurrency ensures all subtasks share the same lifecycle.
+ * Uses virtual threads for parallel subtask execution.
  *
  * Performance: Serial = 1.5s + 0.3s + 0.2s = 2.0s
  *              Parallel = max(1.5s, 0.3s, 0.2s) = 1.5s (25% faster)
  */
+@Component
 public class AgentOrchestrator {
 
     private static final Logger log = LoggerFactory.getLogger(AgentOrchestrator.class);
@@ -30,17 +33,15 @@ public class AgentOrchestrator {
 
         log.info("Starting agent orchestration for request: {}", request.query());
 
-        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
-            Subtask<RagResult> ragTask = scope.fork(
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            Future<RagResult> ragTask = executor.submit(
                 () -> searchKnowledge(request.query(), request.knowledgeBaseId()));
 
-            Subtask<List<Message>> memoryTask = scope.fork(
+            Future<List<Message>> memoryTask = executor.submit(
                 () -> loadConversationHistory(request.sessionId(), 10));
 
-            Subtask<List<ToolDefinition>> toolsTask = scope.fork(
+            Future<List<ToolDefinition>> toolsTask = executor.submit(
                 () -> getAvailableTools(request.agentId()));
-
-            scope.join().throwIfFailed();
 
             RagResult ragResult = ragTask.get();
             List<Message> history = memoryTask.get();
@@ -49,10 +50,7 @@ public class AgentOrchestrator {
             log.info("All subtasks completed. RAG chunks: {}, History messages: {}, Tools: {}",
                 ragResult.chunks().size(), history.size(), tools.size());
 
-            AgentResponse response = executeLlmInference(
-                request, ragResult, history, tools);
-
-            return response;
+            return executeLlmInference(request, ragResult, history, tools);
         }
     }
 
