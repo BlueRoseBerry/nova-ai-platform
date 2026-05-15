@@ -29,7 +29,7 @@ public class AgentController {
     public BaseResponse<Agent> updateAgent(@RequestBody Agent agent) {
         Agent updated = agentService.updateAgent(agent);
         if (updated == null) {
-            return BaseResponse.fail(404, "Agent not found: " + agent.id());
+            return BaseResponse.fail(404, "Agent not found: " + agent.getId());
         }
         return BaseResponse.success(updated);
     }
@@ -51,9 +51,9 @@ public class AgentController {
 
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteAgent(@RequestBody Agent agent) {
-        boolean removed = agentService.deleteAgent(agent.id());
+        boolean removed = agentService.deleteAgent(agent.getId());
         if (!removed) {
-            return BaseResponse.fail(404, "Agent not found: " + agent.id());
+            return BaseResponse.fail(404, "Agent not found: " + agent.getId());
         }
         return BaseResponse.success(true);
     }

@@ -28,7 +28,7 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public void register(Agent agent) {
-        AgentEntity existing = agentMapper.selectById(agent.id());
+        AgentEntity existing = agentMapper.selectById(agent.getId());
         AgentEntity entity = toEntity(agent);
         if (existing == null) {
             agentMapper.insert(entity);
@@ -39,10 +39,10 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public AgentResponse execute(AgentRequest request) {
-        AgentEntity entity = agentMapper.selectById(request.agentId());
+        AgentEntity entity = agentMapper.selectById(request.getAgentId());
         Agent agent = entity == null ? null : toModel(entity);
         if (agent == null) {
-            return new ErrorResponse("resp-err", 404, "Agent not found: " + request.agentId());
+            return new ErrorResponse("resp-err", 404, "Agent not found: " + request.getAgentId());
         }
         try {
             return orchestrator.orchestrate(request);
@@ -70,12 +70,12 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public Agent updateAgent(Agent agent) {
-        AgentEntity existing = agentMapper.selectById(agent.id());
+        AgentEntity existing = agentMapper.selectById(agent.getId());
         if (existing == null) {
             return null;
         }
         agentMapper.updateById(toEntity(agent));
-        return toModel(agentMapper.selectById(agent.id()));
+        return toModel(agentMapper.selectById(agent.getId()));
     }
 
     @Override
@@ -85,15 +85,15 @@ public class AgentServiceImpl implements AgentService {
 
     private AgentEntity toEntity(Agent agent) {
         AgentEntity entity = new AgentEntity();
-        entity.setId(agent.id());
-        entity.setName(agent.name());
-        entity.setRole(agent.role());
-        entity.setSystemPrompt(agent.systemPrompt());
-        entity.setSkillIds(agent.skillIds());
-        entity.setConfig(agent.config());
-        entity.setModelId(agent.modelId());
-        entity.setTemperature(agent.temperature());
-        entity.setMaxTokens(agent.maxTokens());
+        entity.setId(agent.getId());
+        entity.setName(agent.getName());
+        entity.setRole(agent.getRole());
+        entity.setSystemPrompt(agent.getSystemPrompt());
+        entity.setSkillIds(agent.getSkillIds());
+        entity.setConfig(agent.getConfig());
+        entity.setModelId(agent.getModelId());
+        entity.setTemperature(agent.getTemperature());
+        entity.setMaxTokens(agent.getMaxTokens());
         return entity;
     }
 

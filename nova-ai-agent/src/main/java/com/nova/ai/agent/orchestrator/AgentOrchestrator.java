@@ -6,10 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * JDK 25 Structured Concurrency Showcase.
@@ -31,24 +31,24 @@ public class AgentOrchestrator {
     public AgentResponse orchestrate(AgentRequest request)
             throws InterruptedException, ExecutionException {
 
-        log.info("Starting agent orchestration for request: {}", request.query());
+        log.info("Starting agent orchestration for request: {}", request.getQuery());
 
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
             Future<RagResult> ragTask = executor.submit(
-                () -> searchKnowledge(request.query(), request.knowledgeBaseId()));
+                () -> searchKnowledge(request.getQuery(), request.getKnowledgeBaseId()));
 
             Future<List<Message>> memoryTask = executor.submit(
-                () -> loadConversationHistory(request.sessionId(), 10));
+                () -> loadConversationHistory(request.getSessionId(), 10));
 
             Future<List<ToolDefinition>> toolsTask = executor.submit(
-                () -> getAvailableTools(request.agentId()));
+                () -> getAvailableTools(request.getAgentId()));
 
             RagResult ragResult = ragTask.get();
             List<Message> history = memoryTask.get();
             List<ToolDefinition> tools = toolsTask.get();
 
             log.info("All subtasks completed. RAG chunks: {}, History messages: {}, Tools: {}",
-                ragResult.chunks().size(), history.size(), tools.size());
+                ragResult.getChunks().size(), history.size(), tools.size());
 
             return executeLlmInference(request, ragResult, history, tools);
         }
@@ -84,8 +84,77 @@ public class AgentOrchestrator {
         try { Thread.sleep(500); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
         return new TextResponse("resp-001", "AI response based on RAG knowledge and conversation history.");
     }
-}
 
-record RagResult(List<String> chunks) {}
-record Message(String role, String content) {}
-record ToolDefinition(String name, String description) {}
+    public static final class RagResult {
+
+        private final List<String> chunks;
+
+        public RagResult(List<String> chunks) {
+            this.chunks = chunks;
+        }
+
+        public List<String> getChunks() {
+            return chunks;
+        }
+    }
+
+    public static final class Message {
+
+        private String role;
+        private String content;
+
+        public Message() {
+        }
+
+        public Message(String role, String content) {
+            this.role = role;
+            this.content = content;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public void setRole(String role) {
+            this.role = role;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+    }
+
+    public static final class ToolDefinition {
+
+        private String name;
+        private String description;
+
+        public ToolDefinition() {
+        }
+
+        public ToolDefinition(String name, String description) {
+            this.name = name;
+            this.description = description;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+    }
+}

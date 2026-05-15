@@ -2,11 +2,5 @@ package com.nova.ai.agent.model;
 
 public sealed interface AgentResponse
     permits TextResponse, ToolCallResponse, StreamResponse, ErrorResponse {
-    String responseId();
+    String getResponseId();
 }
-
-record ToolCall(
-    String toolId,
-    String toolName,
-    String parameters
-) {}

@@ -24,7 +24,7 @@ public class Retriever {
     public List<RetrievedChunk> retrieve(float[] queryEmbedding, String knowledgeBaseId, int topK) {
         List<VectorEntry> results = vectorStore.search(queryEmbedding, knowledgeBaseId, topK);
         return results.stream()
-            .map(r -> new RetrievedChunk(r.chunkId(), r.content(), 1.0f))
+            .map(r -> new RetrievedChunk(r.chunkId(), r.content(), 1.0))
             .toList();
     }
 }
