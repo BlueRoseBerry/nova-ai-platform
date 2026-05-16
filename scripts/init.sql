@@ -20,7 +20,7 @@ CREATE INDEX idx_digital_human_user_id ON digital_human(user_id);
 CREATE INDEX idx_digital_human_status ON digital_human(publish_status);
 CREATE INDEX idx_digital_human_skills ON digital_human USING GIN(skills);
 
-CREATE TABLE IF NOT EXISTS agent_definition (
+CREATE TABLE IF NOT EXISTS agent (
     id VARCHAR(64) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     role VARCHAR(128),
@@ -30,11 +30,12 @@ CREATE TABLE IF NOT EXISTS agent_definition (
     model_id VARCHAR(64),
     temperature DOUBLE PRECISION DEFAULT 0.7,
     max_tokens INTEGER DEFAULT 2048,
+    deleted BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS workflow_definition (
+CREATE TABLE IF NOT EXISTS workflow (
     id VARCHAR(64) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,

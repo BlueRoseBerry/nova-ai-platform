@@ -2,6 +2,7 @@ package com.nova.ai.agent.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.nova.ai.agent.typehandler.PostgresqlJsonbJacksonTypeHandler;
 
@@ -23,6 +24,8 @@ public class AgentEntity {
     private String modelId;
     private Double temperature;
     private Integer maxTokens;
+    @TableLogic(value = "false", delval = "true")
+    private Boolean deleted;
 
     public String getId() {
         return id;
@@ -94,5 +97,13 @@ public class AgentEntity {
 
     public void setMaxTokens(Integer maxTokens) {
         this.maxTokens = maxTokens;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

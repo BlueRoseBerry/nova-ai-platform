@@ -1,0 +1,6 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://10.253.170.88:35432/postgres}
