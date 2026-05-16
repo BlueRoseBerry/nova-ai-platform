@@ -3,7 +3,7 @@ package com.nova.ai.agent;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "com.nova.ai")
+@SpringBootApplication(scanBasePackages = {"com.nova.ai.agent", "com.nova.ai.common"})
 public class NovaAiAgentApplication {
     public static void main(String[] args) {
         SpringApplication.run(NovaAiAgentApplication.class, args);

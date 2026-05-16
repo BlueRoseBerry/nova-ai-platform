@@ -51,3 +51,34 @@ CREATE TABLE IF NOT EXISTS skill_registry (
     config JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS llm_model (
+    id VARCHAR(64) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    provider VARCHAR(32) NOT NULL DEFAULT 'openai',
+    invoke_format VARCHAR(64) NOT NULL DEFAULT 'openai_chat_completions',
+    remote_model VARCHAR(255) NOT NULL,
+    base_url VARCHAR(512),
+    api_key TEXT,
+    default_temperature DOUBLE PRECISION DEFAULT 0.7,
+    default_max_tokens INTEGER DEFAULT 4096,
+    enabled BOOLEAN DEFAULT TRUE NOT NULL,
+    description TEXT,
+    extra_config JSONB DEFAULT '{}'::jsonb,
+    deleted BOOLEAN DEFAULT FALSE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_llm_model_deleted_enabled ON llm_model(deleted, enabled);
+
+COMMENT ON TABLE llm_model IS '注册的可调用大模型；agent.model_id 可引用 llm_model.id';
+COMMENT ON COLUMN llm_model.id IS '注册表主键，供外部引用（如 agent.model_id）';
+COMMENT ON COLUMN llm_model.remote_model IS '下游 API 收到的 model 字段，例如 gpt-4o-mini';
+COMMENT ON COLUMN llm_model.base_url IS 'OpenAI 兼容 Chat Completions 的 base URL，通常形如 https://api.openai.com/v1；
+为空则回退到配置 nova.model.providers.{provider}.base-url';
+COMMENT ON COLUMN llm_model.api_key IS '明文密钥；生产环境建议改为密钥托管或 KMS，仅在此处存引用；
+为空则回退到环境变量 OPENAI_API_KEY 或 nova.model.providers.openai.api-key（依 provider）';
+COMMENT ON COLUMN llm_model.invoke_format IS '调用协议：当前支持 openai_chat_completions';
+COMMENT ON COLUMN llm_model.extra_config IS '预留扩展头部等 JSON 配置';
+

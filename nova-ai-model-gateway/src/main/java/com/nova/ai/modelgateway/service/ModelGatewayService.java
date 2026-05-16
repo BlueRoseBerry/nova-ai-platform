@@ -25,7 +25,7 @@ public class ModelGatewayService {
 
     public ChatResponse chat(String provider, ChatRequest request) {
         ModelAdapter adapter = adapters.getOrDefault(provider, adapters.get("openai"));
-        log.info("Routing to provider: {}, model: {}", provider, request.model());
+        log.info("Routing to provider: {}, model: {}", provider, request.getModel());
         return adapter.chat(request);
     }
 

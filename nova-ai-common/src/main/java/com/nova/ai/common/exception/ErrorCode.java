@@ -17,7 +17,8 @@ public enum ErrorCode {
     WORKFLOW_EXECUTION_FAILED(500, "Workflow execution failed"),
     SKILL_EXECUTION_FAILED(500, "Skill execution failed"),
     FFM_CALL_FAILED(500, "Native model inference failed"),
-    OPENCLAW_PROTOCOL_ERROR(500, "OpenCLAW protocol error");
+    OPENCLAW_PROTOCOL_ERROR(500, "OpenCLAW protocol error"),
+    MODEL_NOT_FOUND(404, "LLM model registry entry not found");
 
     private final int code;
     private final String message;
