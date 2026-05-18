@@ -6,8 +6,8 @@ spring:
       enabled: true
   datasource:
     url: jdbc:postgresql://localhost:5432/nova_ai
-    username: nova
-    password: nova123
+    username: postgres
+    password: 123456
     driver-class-name: org.postgresql.Driver
   data:
     redis:
@@ -17,7 +17,13 @@ spring:
 server:
   port: 8081
 
+nova:
+  auth:
+    token-ttl-hours: 24
+
 mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
     db-config:

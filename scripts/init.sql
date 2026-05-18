@@ -1,5 +1,26 @@
 -- Nova AI Platform Database Initialization
 
+CREATE TABLE IF NOT EXISTS sys_user (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    account VARCHAR(128) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    phone VARCHAR(32),
+    avatar VARCHAR(512),
+    user_group VARCHAR(128),
+    role VARCHAR(64),
+    tenant VARCHAR(64),
+    deleted BOOLEAN DEFAULT FALSE NOT NULL,
+    create_user VARCHAR(64),
+    update_user VARCHAR(64),
+    create_date VARCHAR(64),
+    update_date VARCHAR(64)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_sys_user_account ON sys_user(account);
+CREATE INDEX IF NOT EXISTS idx_sys_user_tenant ON sys_user(tenant);
+
 CREATE TABLE IF NOT EXISTS digital_human (
     id BIGSERIAL PRIMARY KEY,
     user_id VARCHAR(64) NOT NULL,
