@@ -1,14 +1,18 @@
 package com.nova.ai.agent.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.nova.ai.agent.entity.AgentEntity;
 import com.nova.ai.agent.mapper.AgentMapper;
 import com.nova.ai.agent.model.*;
+import com.nova.ai.agent.model.agent.AgentPageRequest;
+import com.nova.ai.agent.model.agent.AgentPageResponse;
 import com.nova.ai.agent.orchestrator.AgentOrchestrator;
 import com.nova.ai.agent.service.AgentService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -61,11 +65,28 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public List<Agent> listAgents() {
-        return agentMapper.selectList(new LambdaQueryWrapper<>())
-            .stream()
-            .map(this::toModel)
-            .toList();
+    public AgentPageResponse listAgents(AgentPageRequest agentPageRequest) {
+        int current = agentPageRequest.getCurrent() != null && agentPageRequest.getCurrent() > 0
+            ? agentPageRequest.getCurrent() : 1;
+        int pageSize = agentPageRequest.getPageSize() != null && agentPageRequest.getPageSize() > 0
+            ? agentPageRequest.getPageSize() : 10;
+
+        Page<AgentEntity> page = new Page<>(current, pageSize);
+        LambdaQueryWrapper<AgentEntity> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.hasText(agentPageRequest.getName())) {
+            queryWrapper.like(AgentEntity::getName, agentPageRequest.getName());
+        }
+        queryWrapper.orderByDesc(AgentEntity::getCreateDate);
+
+        IPage<AgentEntity> result = agentMapper.selectPage(page, queryWrapper);
+
+        AgentPageResponse response = new AgentPageResponse();
+        response.setTotal(result.getTotal());
+        response.setPages(result.getPages());
+        response.setCurrent(result.getCurrent());
+        response.setPageSize(result.getSize());
+        response.setRecords(result.getRecords().stream().map(this::toModel).toList());
+        return response;
     }
 
     @Override
@@ -98,7 +119,7 @@ public class AgentServiceImpl implements AgentService {
     }
 
     private Agent toModel(AgentEntity entity) {
-        return new Agent(
+        Agent agent = new Agent(
             entity.getId(),
             entity.getName(),
             entity.getRole(),
@@ -109,5 +130,11 @@ public class AgentServiceImpl implements AgentService {
             entity.getTemperature() == null ? 0.0 : entity.getTemperature(),
             entity.getMaxTokens() == null ? 0 : entity.getMaxTokens()
         );
+        agent.setCreateUser(entity.getCreateUser());
+        agent.setUpdateUser(entity.getUpdateUser());
+        agent.setCreateDate(entity.getCreateDate());
+        agent.setUpdateDate(entity.getUpdateDate());
+        agent.setDeleted(entity.getDeleted());
+        return agent;
     }
 }

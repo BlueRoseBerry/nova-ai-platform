@@ -48,8 +48,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         BeanUtils.copyProperties(userCreateRequest, newUser);
         newUser.setPassword(encodePassword(userCreateRequest.getPassword()));
         newUser.setDeleted(false);
-        LocalDateTime currentDate = LocalDateTime.now();
-        newUser.setCreateDate(currentDate.toString());
         baseMapper.insert(newUser);
         return newUser;
     }
@@ -77,7 +75,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new NovaAiException(ErrorCode.USER_NOT_FOUND);
         }
         applyUpdate(userUpdateRequest, user);
-        user.setUpdateDate(Instant.now().toString());
         baseMapper.updateById(user);
         return user;
     }

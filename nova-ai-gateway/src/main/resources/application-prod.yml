@@ -1,0 +1,40 @@
+# K8s / 容器编排环境：使用 Service 名称作为下游地址
+spring:
+  config:
+    activate:
+      on-profile: prod
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: nova-ai-service-user
+              uri: http://nova-ai-service:8081
+              predicates:
+                - Path=/api/v1/user/**
+            - id: nova-ai-service-digital-human
+              uri: http://nova-ai-service:8081
+              predicates:
+                - Path=/api/v1/digital-human/**
+            - id: nova-ai-agent
+              uri: http://nova-ai-agent:8082
+              predicates:
+                - Path=/api/v1/agents/**
+            - id: nova-ai-workflow
+              uri: http://nova-ai-workflow:8083
+              predicates:
+                - Path=/api/v1/workflow/**
+            - id: nova-ai-model-gateway
+              uri: http://nova-ai-model-gateway:8084
+              predicates:
+                - Path=/api/v1/model/**
+              metadata:
+                response-timeout: 3600000
+            - id: nova-ai-rag
+              uri: http://nova-ai-rag:8085
+              predicates:
+                - Path=/api/v1/rag/**
+            - id: nova-ai-skill
+              uri: http://nova-ai-skill:8086
+              predicates:
+                - Path=/api/v1/skill/**,/api/v1/skills/**

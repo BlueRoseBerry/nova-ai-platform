@@ -3,6 +3,9 @@ package com.nova.ai.agent.controller;
 import com.nova.ai.agent.model.Agent;
 import com.nova.ai.agent.model.AgentRequest;
 import com.nova.ai.agent.model.AgentResponse;
+import com.nova.ai.agent.model.agent.AgentPageResponse;
+import com.nova.ai.agent.model.agent.AgentPageRequest;
+
 import com.nova.ai.agent.service.AgentService;
 import com.nova.ai.common.response.BaseResponse;
 import org.springframework.web.bind.annotation.*;
@@ -45,8 +48,8 @@ public class AgentController {
     }
 
     @GetMapping("lists")
-    public BaseResponse<List<Agent>> listAgents() {
-        return BaseResponse.success(agentService.listAgents());
+    public BaseResponse<AgentPageResponse> listAgents(@RequestBody AgentPageRequest agentPageRequest) {
+        return BaseResponse.success(agentService.listAgents(agentPageRequest));
     }
 
     @PostMapping("/delete")

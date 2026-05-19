@@ -1,33 +1,54 @@
 spring:
   application:
     name: nova-ai-gateway
+  main:
+    web-application-type: reactive
   cloud:
     gateway:
-      routes:
-        - id: nova-ai-service
-          uri: http://localhost:8081
-          predicates:
-            - Path=/api/v1/digital-human/**
-        - id: nova-ai-agent
-          uri: http://localhost:8082
-          predicates:
-            - Path=/api/v1/agent/**
-        - id: nova-ai-workflow
-          uri: http://localhost:8083
-          predicates:
-            - Path=/api/v1/workflow/**
-        - id: nova-ai-model-gateway
-          uri: http://localhost:8084
-          predicates:
-            - Path=/api/v1/model/**
-        - id: nova-ai-rag
-          uri: http://localhost:8085
-          predicates:
-            - Path=/api/v1/rag/**
-        - id: nova-ai-skill
-          uri: http://localhost:8086
-          predicates:
-            - Path=/api/v1/skill/**
+      server:
+        webflux:
+          routes:
+            # ---------- nova-ai-service (8081) ----------
+            - id: nova-ai-service-user
+              uri: ${NOVA_SERVICE_URI:http://localhost:8081}
+              predicates:
+                - Path=/api/v1/user/**
+            - id: nova-ai-service-digital-human
+              uri: ${NOVA_SERVICE_URI:http://localhost:8081}
+              predicates:
+                - Path=/api/v1/digital-human/**
+
+            # ---------- nova-ai-agent (8082) ----------
+            - id: nova-ai-agent
+              uri: ${NOVA_AGENT_URI:http://localhost:8082}
+              predicates:
+                - Path=/api/v1/agents/**
+
+            # ---------- nova-ai-workflow (8083) ----------
+            - id: nova-ai-workflow
+              uri: ${NOVA_WORKFLOW_URI:http://localhost:8083}
+              predicates:
+                - Path=/api/v1/workflow/**
+
+            # ---------- nova-ai-model-gateway (8084) ----------
+            - id: nova-ai-model-gateway
+              uri: ${NOVA_MODEL_GATEWAY_URI:http://localhost:8084}
+              predicates:
+                - Path=/api/v1/model/**
+              metadata:
+                response-timeout: 3600000
+
+            # ---------- nova-ai-rag (8085) ----------
+            - id: nova-ai-rag
+              uri: ${NOVA_RAG_URI:http://localhost:8085}
+              predicates:
+                - Path=/api/v1/rag/**
+
+            # ---------- nova-ai-skill (8086) ----------
+            - id: nova-ai-skill
+              uri: ${NOVA_SKILL_URI:http://localhost:8086}
+              predicates:
+                - Path=/api/v1/skill/**,/api/v1/skills/**
 
 server:
   port: 8080
