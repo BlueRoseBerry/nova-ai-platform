@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS agent (
     deleted BOOLEAN DEFAULT FALSE,
     create_user VARCHAR(64) DEFAULT '',
     update_user VARCHAR(64) DEFAULT '',
-    created_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_date TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    created_date TIMESTAMP DEFAULT NOW(),
+    updated_date TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS workflow (

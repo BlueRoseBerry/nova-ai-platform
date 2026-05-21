@@ -1,16 +1,19 @@
 package com.nova.ai.agent.controller;
 
 import com.nova.ai.agent.model.Agent;
+import com.nova.ai.agent.model.AgentChatRequest;
+import com.nova.ai.agent.model.AgentChatResponse;
 import com.nova.ai.agent.model.AgentRequest;
 import com.nova.ai.agent.model.AgentResponse;
 import com.nova.ai.agent.model.agent.AgentPageResponse;
 import com.nova.ai.agent.model.agent.AgentPageRequest;
+import com.nova.ai.agent.model.agent.AgentRegisterRequest;
 
 import com.nova.ai.agent.service.AgentService;
 import com.nova.ai.common.response.BaseResponse;
+import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/agents")
@@ -23,9 +26,9 @@ public class AgentController {
     }
 
     @PostMapping("/register")
-    public BaseResponse<Void> register(@RequestBody Agent agent) {
-        agentService.register(agent);
-        return BaseResponse.success(null);
+    public BaseResponse<Agent> register(@Valid @RequestBody AgentRegisterRequest request) {
+        Agent agent = agentService.register(request);
+        return BaseResponse.success(agent);
     }
 
     @PostMapping("/update")
@@ -42,12 +45,22 @@ public class AgentController {
         return BaseResponse.success(agentService.execute(request));
     }
 
+    @PostMapping("/chat")
+    public BaseResponse<AgentChatResponse> chat(@Valid @RequestBody AgentChatRequest request) {
+        return BaseResponse.success(agentService.chat(request));
+    }
+
+    @PostMapping(value = "/chat-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public reactor.core.publisher.Flux<String> chatStream(@Valid @RequestBody AgentChatRequest request) {
+        return agentService.chatStream(request);
+    }
+
     @GetMapping("/{agentId}")
     public BaseResponse<Agent> getAgent(@PathVariable String agentId) {
         return BaseResponse.success(agentService.getAgent(agentId));
     }
 
-    @GetMapping("lists")
+    @PostMapping("lists")
     public BaseResponse<AgentPageResponse> listAgents(@RequestBody AgentPageRequest agentPageRequest) {
         return BaseResponse.success(agentService.listAgents(agentPageRequest));
     }

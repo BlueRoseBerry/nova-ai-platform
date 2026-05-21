@@ -1,12 +1,14 @@
-package com.nova.ai.modelgateway.dto;
+package com.nova.ai.agent.model;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessagePayload {
+public class ChatMessage {
 
     @NotBlank(message = "role 不能为空")
     private String role;
